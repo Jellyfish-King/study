@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="基于线性代数例题课件的刷题闪卡：先看题，再翻面看完整解析。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%232f3f8f'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='white' font-family='serif'%3E%E7%BA%BF%3C/text%3E%3C/svg%3E">
+<title>线性代数 · 例题闪卡</title>
+<style>
+  :root{
+    --bg:#f3efe7;
+    --bg-2:#ece6da;
+    --paper:#fffdf9;
+    --ink:#20242e;
+    --muted:#6f7480;
+    --line:#e5ded0;
+    --brand:#2f3f8f;
+    --brand-2:#5765c7;
+    --accent:#d4573f;
+    --good:#2f7d5b;
+    --hard:#a9761c;
+    --again:#b3423a;
+    --shadow:0 18px 44px rgba(38,42,62,.09), 0 2px 6px rgba(38,42,62,.04);
+    --serif:"Songti SC","Noto Serif SC","Source Han Serif SC","STSong",serif;
+    --sans:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:var(--sans);
+    color:var(--ink);
+    background:
+      radial-gradient(1100px 620px at 8% -8%, #fbf7ee 0%, rgba(251,247,238,0) 62%),
+      radial-gradient(900px 520px at 105% 4%, #e9ecfb 0%, rgba(233,236,251,0) 58%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  button{font-family:inherit;color:inherit;border:none;background:none;cursor:pointer}
+  img{max-width:100%}
+  .hidden{display:none !important}
+  .screen{min-height:100vh;position:relative}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+
+  /* ---------- home ---------- */
+  .home-top{display:flex;align-items:center;justify-content:space-between;padding:26px 0 0}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:.04em;color:#3c4257}
+  .brand .mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(145deg,var(--brand),var(--brand-2));display:grid;place-items:center;color:#fff;font-family:var(--serif);font-size:17px;box-shadow:0 6px 14px rgba(47,63,143,.28)}
+  .brand small{font-weight:400;color:var(--muted);letter-spacing:.12em;font-size:11px}
+  .top-actions{display:flex;gap:8px}
+  .chipbtn{border:1px solid var(--line);background:rgba(255,253,249,.7);border-radius:999px;padding:8px 14px;font-size:12.5px;color:#4a4f5e;transition:.2s}
+  .chipbtn:hover{border-color:#c9c2b2;background:#fffdf9}
+  .chipbtn.on{background:var(--brand);border-color:var(--brand);color:#fff;box-shadow:0 6px 16px rgba(47,63,143,.22)}
+
+  .hero{display:grid;grid-template-columns:1.35fr .65fr;gap:30px;align-items:center;padding:48px 0 26px}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.16em;color:#7a6f5c;text-transform:uppercase}
+  .eyebrow:before{content:"";width:26px;height:1px;background:#b9ac93}
+  h1{font-family:var(--serif);font-size:clamp(38px,6.2vw,64px);line-height:1.06;margin:16px 0 0;font-weight:700;letter-spacing:.01em}
+  h1 em{font-style:normal;color:var(--brand);position:relative;white-space:nowrap}
+  h1 em:after{content:"";position:absolute;left:2px;right:2px;bottom:.08em;height:.22em;background:rgba(212,87,63,.18);z-index:-1;border-radius:3px}
+  .lede{margin:18px 0 0;max-width:560px;color:#565b68;font-size:15px;line-height:1.85}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px;align-items:center}
+  .btn{border-radius:999px;padding:13px 24px;font-size:15px;font-weight:600;transition:transform .16s ease, box-shadow .16s ease, background .16s ease}
+  .btn:active{transform:translateY(1px) scale(.995)}
+  .btn.primary{background:linear-gradient(145deg,var(--brand),#3a4aa6);color:#fff;box-shadow:0 12px 26px rgba(47,63,143,.28)}
+  .btn.primary:hover{box-shadow:0 16px 30px rgba(47,63,143,.34);transform:translateY(-1px)}
+  .btn.ghost{background:rgba(255,255,255,.6);border:1px solid var(--line);color:#3d4353}
+  .btn.ghost:hover{background:#fff}
+  .btn.wide{width:100%;justify-content:center;display:flex;align-items:center;gap:10px}
+  .btn[disabled]{opacity:.55;cursor:default;box-shadow:none;transform:none}
+  .kbd{font-size:11px;border:1px solid currentColor;opacity:.55;border-radius:5px;padding:1px 5px;margin-left:4px;font-family:ui-monospace,monospace}
+
+  .ringbox{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .ring{position:relative;width:172px;height:172px;filter:drop-shadow(0 10px 20px rgba(47,63,143,.12))}
+  .ring svg{transform:rotate(-90deg);width:100%;height:100%;display:block}
+  .ring .val{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+  .ring .val b{display:block;font-family:var(--serif);font-size:38px;line-height:1;letter-spacing:.01em}
+  .ring .val span{display:block;margin-top:6px;font-size:11px;letter-spacing:.18em;color:var(--muted)}
+  .legend{font-size:12.5px;color:var(--muted)}
+
+  .statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:8px 0 34px}
+  .stat{background:rgba(255,253,249,.72);border:1px solid rgba(229,222,208,.9);border-radius:16px;padding:15px 18px;backdrop-filter:blur(6px)}
+  .stat b{font-family:var(--serif);font-size:25px;font-weight:700;display:block;line-height:1.1}
+  .stat span{font-size:12px;color:var(--muted);letter-spacing:.06em}
+
+  .section-title{display:flex;align-items:baseline;justify-content:space-between;margin:34px 0 14px}
+  .section-title h2{font-family:var(--serif);font-size:21px;margin:0;font-weight:700}
+  .section-title p{margin:0;color:var(--muted);font-size:12.5px}
+
+  .chapters{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .chapter{display:grid;grid-template-columns:42px 1fr auto;gap:14px;align-items:center;text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:16px 18px;box-shadow:0 10px 26px rgba(38,42,62,.05);transition:transform .18s ease, box-shadow .18s ease, border-color .18s}
+  .chapter:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:#d7cfbf}
+  .chapter .num{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-family:var(--serif);font-size:17px;color:#fff;background:var(--ch,#2f3f8f);box-shadow:inset 0 -6px 12px rgba(0,0,0,.12)}
+  .chapter h3{margin:0;font-size:15.5px;font-weight:650;letter-spacing:.01em}
+  .chapter .meta{margin-top:5px;display:flex;align-items:center;gap:9px;color:var(--muted);font-size:12px}
+  .minibar{height:4px;background:#eee9de;border-radius:99px;overflow:hidden;width:100%;margin-top:9px}
+  .minibar i{display:block;height:100%;background:var(--ch,#2f3f8f);border-radius:99px;transition:width .4s ease}
+  .chapter .go{color:#a79c88;font-size:18px;transition:.2s}
+  .chapter:hover .go{transform:translateX(3px);color:var(--brand)}
+  .home-foot{margin:40px 0 26px;display:flex;justify-content:space-between;gap:18px;color:#8b8578;font-size:12px;line-height:1.7;flex-wrap:wrap}
+  .home-foot button{color:#8b8578;text-decoration:underline;text-underline-offset:3px}
+
+  /* ---------- practice ---------- */
+  .topbar{position:sticky;top:0;z-index:30;background:rgba(243,239,231,.86);backdrop-filter:blur(14px);border-bottom:1px solid rgba(229,222,208,.7)}
+  .topbar .inner{max-width:940px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:13px 20px}
+  .iconbtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:rgba(255,253,249,.8);display:grid;place-items:center;font-size:17px;color:#4c5262;transition:.2s}
+  .iconbtn:hover{background:#fff;border-color:#cfc7b6}
+  .crumb{display:flex;align-items:center;gap:10px;min-width:0}
+  .crumb .dot{width:9px;height:9px;border-radius:50%;background:var(--ch,var(--brand));flex:none}
+  .crumb .t1{font-size:13.5px;font-weight:650;white-space:nowrap}
+  .crumb .t2{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .count{margin-left:auto;font-size:12px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .count b{font-family:var(--serif);font-size:17px;color:var(--ink);margin-right:2px}
+  .progressline{height:3px;background:rgba(0,0,0,.05)}
+  .progressline i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--brand),var(--brand-2));transition:width .35s ease}
+
+  .stage{max-width:900px;margin:26px auto 40px;padding:0 20px 120px}
+  .card-kicker{display:flex;justify-content:space-between;align-items:center;margin:0 4px 10px;color:#8b8578;font-size:11.5px;letter-spacing:.05em}
+  .card-kicker .tag{border:1px solid #ded6c6;border-radius:999px;padding:3px 9px;background:rgba(255,255,255,.5)}
+  .card{background:var(--paper);border:1px solid rgba(229,222,208,.95);border-radius:22px;padding:18px 18px 8px;box-shadow:var(--shadow);animation:cardIn .32s cubic-bezier(.22,.9,.32,1) both}
+  @keyframes cardIn{from{opacity:0;transform:translateY(14px) scale(.995)}to{opacity:1;transform:none}}
+  .card.leaving{animation:cardOut .2s ease forwards}
+  @keyframes cardOut{to{opacity:0;transform:translateY(-10px) scale(.995)}}
+  .qbox img,.abox img{display:block;width:100%;height:auto;border-radius:10px;cursor:zoom-in;background:#fff}
+  .qbox{padding:6px 4px 2px}
+  .hint{margin:14px 4px 4px;color:#9a9384;font-size:12px;display:flex;align-items:center;gap:7px}
+  .hint:before{content:"";width:5px;height:5px;border-radius:50%;background:#c9bfa9}
+  .revealwrap{padding:16px 4px 12px}
+  .divider{display:flex;align-items:center;gap:12px;color:#a08f74;font-size:12px;letter-spacing:.22em;margin:14px 2px 16px}
+  .divider:before,.divider:after{content:"";height:1px;background:linear-gradient(90deg,transparent,#ddd3c1,transparent);flex:1}
+  .divider span{padding:0 4px}
+  .abox{display:flex;flex-direction:column;gap:10px;animation:softIn .3s ease both}
+  @keyframes softIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .abox img{cursor:zoom-in}
+
+  .ratedock{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;width:min(760px,calc(100% - 24px));z-index:40;background:rgba(255,253,249,.92);backdrop-filter:blur(16px);border:1px solid rgba(229,222,208,.95);border-radius:20px;box-shadow:0 22px 50px rgba(38,42,62,.18);padding:12px}
+  .ratedock .ask{text-align:center;font-size:11.5px;color:#8b8578;letter-spacing:.14em;margin:2px 0 9px}
+  .rates{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+  .rate{border-radius:14px;padding:12px 8px 11px;font-size:14px;font-weight:650;display:flex;flex-direction:column;align-items:center;gap:2px;border:1px solid transparent;transition:.16s}
+  .rate small{font-size:10.5px;font-weight:400;opacity:.62;letter-spacing:.06em}
+  .rate.k1{background:#f8e7e5;color:#8f2f28;border-color:#eed3cf}
+  .rate.k2{background:#f7eed8;color:#7c5712;border-color:#ecdfbd}
+  .rate.k3{background:#e4f1ea;color:#205f43;border-color:#cfe6da}
+  .rate:hover{transform:translateY(-2px);filter:brightness(.985)}
+  .rate:active{transform:translateY(0)}
+  .rate .key{font-size:10px;opacity:.55}
+
+  /* ---------- summary ---------- */
+  .summary{max-width:720px;margin:0 auto;padding:44px 20px 60px}
+  .summary-card{background:var(--paper);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:34px 30px;text-align:center}
+  .seal{width:74px;height:74px;border-radius:50%;margin:0 auto 18px;display:grid;place-items:center;background:linear-gradient(145deg,#e8f1ec,#d7e8df);color:var(--good);font-size:32px}
+  .summary h2{font-family:var(--serif);font-size:30px;margin:0}
+  .summary .sub{color:var(--muted);font-size:13.5px;margin-top:8px}
+  .sumstats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:26px 0 6px}
+  .sumstat{background:#faf7f0;border:1px solid #eee7d9;border-radius:14px;padding:12px 6px}
+  .sumstat b{display:block;font-family:var(--serif);font-size:22px}
+  .sumstat span{font-size:11px;color:var(--muted)}
+  .weaklist{text-align:left;margin:22px 0 4px}
+  .weaklist h3{font-size:12.5px;letter-spacing:.12em;color:#8b8578;font-weight:600;margin:0 0 8px}
+  .weakitems{display:flex;flex-wrap:wrap;gap:7px}
+  .weakitems span{font-size:11.5px;background:#f8e7e5;color:#8f2f28;border:1px solid #eed3cf;border-radius:999px;padding:4px 9px}
+  .sum-actions{display:flex;gap:10px;justify-content:center;margin-top:26px;flex-wrap:wrap}
+  .empty-note{color:var(--muted);font-size:13px;margin-top:10px}
+
+  /* ---------- wrongbook ---------- */
+  .badge{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--accent);color:#fff;font-size:11px;font-weight:600;line-height:1;margin-left:6px;vertical-align:1px}
+  .chapter.wb{--ch:#b3423a;grid-column:1/-1}
+  .chapter.wb .num{background:linear-gradient(145deg,#a83f36,#d4573f);font-size:15px}
+  .chapter.wb .minibar i{background:linear-gradient(90deg,#c04a3c,#d4573f)}
+  .wb-main{max-width:940px;margin:0 auto;padding:22px 20px 70px}
+  .wb-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+  .wb-chips{display:flex;gap:7px;flex-wrap:wrap}
+  .wb-chip{border:1px solid var(--line);background:rgba(255,253,249,.72);border-radius:999px;padding:7px 13px;font-size:12.5px;color:#4a4f5e;transition:.18s}
+  .wb-chip:hover{border-color:#cfc7b6;background:#fffdf9}
+  .wb-chip.on{background:var(--brand);border-color:var(--brand);color:#fff}
+  .wb-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .btn.small{padding:9px 16px;font-size:13px;border-radius:999px}
+  .btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none}
+  .wb-view{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:rgba(255,253,249,.72)}
+  .wb-view button{padding:7px 13px;font-size:12.5px;color:#4a4f5e}
+  .wb-view button.on{background:#3c4257;color:#fff}
+  .wb-group{margin-bottom:18px}
+  .wb-group h3{display:flex;align-items:baseline;justify-content:space-between;font-size:12px;letter-spacing:.1em;color:#8b8578;font-weight:600;margin:0 0 8px}
+  .wb-group h3 span{font-weight:400;letter-spacing:0}
+  .wb-row{display:flex;align-items:center;gap:12px;background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:11px 14px;margin-bottom:8px;box-shadow:0 6px 18px rgba(38,42,62,.04)}
+  .wb-row .idx{width:36px;height:36px;border-radius:11px;flex:none;display:grid;place-items:center;font-family:var(--serif);font-size:13px;color:#fff;background:var(--ch,#b3423a)}
+  .wb-row .info{flex:1;min-width:0}
+  .wb-row .info b{display:block;font-size:13.5px;font-weight:650}
+  .wb-row .info span{display:block;margin-top:4px;font-size:11.5px;color:var(--muted);line-height:1.5}
+  .wb-row .tagx{flex:none;font-size:11px;padding:3px 9px;border-radius:999px;border:1px solid #e2dbcd;color:#7b7566;background:#f8f4ec;white-space:nowrap}
+  .wb-row .tagx.again{color:#8f2f28;background:#f8e7e5;border-color:#eed3cf}
+  .wb-row .tagx.hard{color:#7c5712;background:#f7eed8;border-color:#ecdfbd}
+  .wb-row .tagx.good{color:#205f43;background:#e4f1ea;border-color:#cfe6da}
+  .wb-row .rem{flex:none;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:12px;color:#6f7480;transition:.18s}
+  .wb-row .rem:hover{border-color:#e2b6ae;color:#8f2f28;background:#fdf1ef}
+  .wb-empty{text-align:center;padding:64px 20px;color:var(--muted);font-size:13.5px;line-height:2}
+  .wb-empty b{display:block;font-family:var(--serif);font-size:19px;color:#4a4f5e;margin-bottom:6px}
+
+  /* ---------- zoom ---------- */
+  .zoom{position:fixed;inset:0;z-index:80;background:rgba(24,26,34,.9);backdrop-filter:blur(4px);display:flex;flex-direction:column}
+  .zoom-bar{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:12px 16px;color:#fff}
+  .zoom-bar button{color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:9px;padding:6px 12px;font-size:13px;background:rgba(255,255,255,.08)}
+  .zoom-bar .pct{font-size:12px;opacity:.7;min-width:46px;text-align:center;font-variant-numeric:tabular-nums}
+  .zoom-scroll{flex:1;overflow:auto;padding:0 16px 24px;text-align:center}
+  .zoom-scroll img{width:100%;max-width:1200px;height:auto;background:#fff;border-radius:8px;transition:width .15s ease}
+
+  /* ---------- misc ---------- */
+  .toast{position:fixed;left:50%;bottom:32px;transform:translate(-50%,20px);background:#262a36;color:#fff;padding:10px 18px;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;z-index:100;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+  .toast.on{opacity:1;transform:translate(-50%,0)}
+  .fadein{animation:fadein .4s ease both}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+
+  @media (max-width:820px){
+    .hero{grid-template-columns:1fr;padding-top:30px;gap:26px}
+    .ringbox{flex-direction:column;align-items:flex-start;gap:10px}
+    .ring{width:132px;height:132px}
+    .ring .val b{font-size:30px}
+    .legend{max-width:300px;line-height:1.6}
+    .chapters{grid-template-columns:1fr}
+    .statgrid{gap:9px}
+    .stat{padding:12px 14px}
+    .stat b{font-size:21px}
+    .top-actions .chipbtn span.long{display:none}
+    .stage{margin-top:18px;padding:0 12px 150px}
+    .card{padding:12px 10px 6px;border-radius:18px}
+    .card-kicker{margin:2px 2px 8px}
+    .ratedock{bottom:10px;padding:9px;border-radius:16px}
+    .rate{padding:10px 4px;font-size:13px}
+    .sumstats{grid-template-columns:repeat(2,1fr)}
+    .summary{padding:26px 14px 50px}
+    .summary-card{padding:26px 18px}
+    .wb-main{padding:16px 12px 60px}
+    .wb-toolbar{gap:10px}
+    .wb-row{padding:10px 11px;gap:9px}
+    .wb-row .tagx{display:none}
+    .wb-row .rem{padding:6px 10px}
+  }
+  @media (hover:none){
+    .keyhints{display:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HOME ============ -->
+<section id="home" class="screen">
+  <div class="wrap">
+    <div class="home-top">
+      <div class="brand"><span class="mark">线</span><span>线性代数 · 例题闪卡<br><small>EXAMPLE FLASHCARDS</small></span></div>
+      <div class="top-actions">
+        <button id="shuffleToggle" class="chipbtn" title="随机打乱卡片顺序">随机顺序</button>
+        <button id="weakToggle" class="chipbtn" title="只练尚未掌握的卡片">只练未掌握</button>
+        <button id="wrongOnlyToggle" class="chipbtn" title="只练错题本里的卡片">只练错题</button>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div>
+        <span class="eyebrow">工程数学 · 刷题计划</span>
+        <h1>先想一步，<br>再看<em>解析</em>。</h1>
+        <p class="lede">题库来自《线性代数例题》课件：行列式、矩阵、线性方程组、向量组、相似矩阵与二次型，共 <b id="deckCount">68</b> 道例题。每张卡片先给题目，翻面查看原课件的完整推导。</p>
+        <div class="hero-actions">
+          <button id="startBtn" class="btn primary">开始刷题 <span class="kbd">Enter</span></button>
+          <button id="resumeBtn" class="btn ghost hidden">继续上次</button>
+          <button id="wrongBtn" class="btn ghost">错题本<span class="badge" id="wrongHeroN">0</span></button>
+        </div>
+      </div>
+      <div class="ringbox">
+        <div class="ring">
+          <svg width="172" height="172" viewBox="0 0 172 172">
+            <circle cx="86" cy="86" r="70" fill="none" stroke="#e7e0d2" stroke-width="10"/>
+            <circle id="ringFg" cx="86" cy="86" r="70" fill="none" stroke="url(#g1)" stroke-width="10" stroke-linecap="round" stroke-dasharray="439.8" stroke-dashoffset="439.8"/>
+            <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f3f8f"/><stop offset="1" stop-color="#6a77d4"/></linearGradient></defs>
+          </svg>
+          <div class="val"><b id="masterPct">0%</b><span>已掌握</span></div>
+        </div>
+        <div class="legend"><b id="masteredN">0</b> / <span id="totalN">68</span> 张已掌握 · 连续 <b id="streakN">0</b> 天</div>
+      </div>
+    </div>
+
+    <div class="statgrid">
+      <div class="stat"><b id="todayN">0</b><span>今日已刷</span></div>
+      <div class="stat"><b id="dueN">0</b><span>待复习</span></div>
+      <div class="stat"><b id="unseenN">68</b><span>还没开始</span></div>
+    </div>
+
+    <div class="section-title"><h2>按章练习</h2><p>点一个章节，只刷这一章</p></div>
+    <div class="chapters" id="chapterList"></div>
+
+    <div class="home-foot">
+      <div>题库：线性代数例题课件 · 68 张卡片<br>建议：先自己在纸上算，再翻面核对步骤。</div>
+      <div style="text-align:right"><button id="resetBtn">清空学习记录</button><br><span id="savedHint">进度自动保存在本机浏览器</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRACTICE ============ -->
+<section id="practice" class="screen hidden">
+  <header class="topbar">
+    <div class="inner">
+      <button id="backBtn" class="iconbtn" title="返回目录">←</button>
+      <div class="crumb">
+        <span class="dot" id="crumbDot"></span>
+        <div>
+          <div class="t1" id="crumbTitle">第 1 章 · 行列式</div>
+          <div class="t2" id="crumbSub">原课件 P4 · 共 20 张</div>
+        </div>
+      </div>
+      <div class="count"><b id="doneN">0</b>/<span id="sessionTotal">20</span></div>
+    </div>
+    <div class="progressline"><i id="progressBar"></i></div>
+  </header>
+
+  <main class="stage">
+    <div class="card-kicker">
+      <span id="kickerLeft">第 1 张 · 行列式</span>
+      <span class="tag" id="kickerRight">例题</span>
+    </div>
+    <article class="card" id="card">
+      <div class="qbox" id="qbox"></div>
+      <div class="hint">先在心里或纸上做一遍，再翻面看解析</div>
+      <div class="revealwrap">
+        <button id="revealBtn" class="btn primary wide">显示解析 <span class="kbd">Space</span></button>
+      </div>
+      <div id="answerArea" class="hidden">
+        <div class="divider"><span>解 析</span></div>
+        <div class="abox" id="abox"></div>
+      </div>
+    </article>
+  </main>
+</section>
+
+<!-- ============ WRONGBOOK ============ -->
+<section id="wrongbook" class="screen hidden">
+  <header class="topbar">
+    <div class="inner">
+      <button id="wbBack" class="iconbtn" title="返回目录">←</button>
+      <div class="crumb">
+        <span class="dot" style="background:var(--accent)"></span>
+        <div>
+          <div class="t1">错题本</div>
+          <div class="t2" id="wbSub">在册 0 张 · 已订正 0 张</div>
+        </div>
+      </div>
+      <div class="count"><b id="wbN">0</b>/<span id="wbTotal">0</span></div>
+    </div>
+  </header>
+  <main class="wb-main">
+    <div class="wb-toolbar">
+      <div class="wb-chips" id="wbChips"></div>
+      <div class="wb-actions">
+        <div class="wb-view">
+          <button id="wbViewActive" class="on">在册</button>
+          <button id="wbViewDone">已订正</button>
+        </div>
+        <button id="wbPractice" class="btn primary small">只练这些</button>
+        <button id="wbClear" class="chipbtn">清空错题本</button>
+      </div>
+    </div>
+    <div id="wbList"></div>
+  </main>
+</section>
+
+<!-- ============ SUMMARY ============ -->
+<section id="summary" class="screen hidden">
+  <div class="summary">
+    <div class="summary-card">
+      <div class="seal">✓</div>
+      <h2>这一轮完成啦</h2>
+      <p class="sub" id="sumSub">共复习 20 张卡片</p>
+      <div class="sumstats">
+        <div class="sumstat"><b id="sumGood">0</b><span>会了</span></div>
+        <div class="sumstat"><b id="sumHard">0</b><span>模糊</span></div>
+        <div class="sumstat"><b id="sumAgain">0</b><span>不会</span></div>
+        <div class="sumstat"><b id="sumTime">0:00</b><span>用时</span></div>
+      </div>
+      <div class="weaklist" id="weakList"></div>
+      <div class="sum-actions">
+        <button id="againBtn" class="btn primary">再练一轮</button>
+        <button id="homeBtn" class="btn ghost">返回目录</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- zoom -->
+<div id="zoom" class="zoom hidden" aria-hidden="true">
+  <div class="zoom-bar">
+    <button id="zoomOut">−</button><span class="pct" id="zoomPct">100%</span><button id="zoomIn">+</button>
+    <button id="zoomClose">关闭</button>
+  </div>
+  <div class="zoom-scroll" id="zoomScroll"><img id="zoomImg" alt="放大查看"></div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const DECK = [{"id":"c001","chapter":1,"chapterName":"行列式","slide":4,"no":1,"q":["assets/img/q-001-1.webp"],"a":["assets/img/a-001-1.webp"]},{"id":"c002","chapter":1,"chapterName":"行列式","slide":5,"no":2,"q":["assets/img/q-002-1.webp"],"a":["assets/img/a-002-1.webp"]},{"id":"c003","chapter":1,"chapterName":"行列式","slide":6,"no":3,"q":["assets/img/q-003-1.webp"],"a":["assets/img/a-003-1.webp"]},{"id":"c004","chapter":1,"chapterName":"行列式","slide":7,"no":4,"q":["assets/img/q-004-1.webp"],"a":["assets/img/a-004-1.webp","assets/img/a-004-2.webp"]},{"id":"c005","chapter":1,"chapterName":"行列式","slide":9,"no":5,"q":["assets/img/q-005-1.webp"],"a":["assets/img/a-005-1.webp"]},{"id":"c006","chapter":1,"chapterName":"行列式","slide":10,"no":6,"q":["assets/img/q-006-1.webp"],"a":["assets/img/a-006-1.webp"]},{"id":"c007","chapter":1,"chapterName":"行列式","slide":11,"no":7,"q":["assets/img/q-007-1.webp"],"a":["assets/img/a-007-1.webp","assets/img/a-007-2.webp"]},{"id":"c008","chapter":1,"chapterName":"行列式","slide":13,"no":8,"q":["assets/img/q-008-1.webp"],"a":["assets/img/a-008-1.webp","assets/img/a-008-2.webp"]},{"id":"c009","chapter":1,"chapterName":"行列式","slide":16,"no":9,"q":["assets/img/q-009-1.webp"],"a":["assets/img/a-009-1.webp"]},{"id":"c010","chapter":1,"chapterName":"行列式","slide":17,"no":10,"q":["assets/img/q-010-1.webp"],"a":["assets/img/a-010-1.webp","assets/img/a-010-2.webp","assets/img/a-010-3.webp","assets/img/a-010-4.webp","assets/img/a-010-5.webp"]},{"id":"c011","chapter":1,"chapterName":"行列式","slide":23,"no":11,"q":["assets/img/q-011-1.webp"],"a":["assets/img/a-011-1.webp","assets/img/a-011-2.webp"]},{"id":"c012","chapter":1,"chapterName":"行列式","slide":25,"no":12,"q":["assets/img/q-012-1.webp"],"a":["assets/img/a-012-1.webp","assets/img/a-012-2.webp"]},{"id":"c013","chapter":1,"chapterName":"行列式","slide":27,"no":13,"q":["assets/img/q-013-1.webp"],"a":["assets/img/a-013-1.webp","assets/img/a-013-2.webp","assets/img/a-013-3.webp"]},{"id":"c014","chapter":1,"chapterName":"行列式","slide":30,"no":14,"q":["assets/img/q-014-1.webp"],"a":["assets/img/a-014-1.webp"]},{"id":"c015","chapter":1,"chapterName":"行列式","slide":31,"no":15,"q":["assets/img/q-015-1.webp"],"a":["assets/img/a-015-1.webp","assets/img/a-015-2.webp","assets/img/a-015-3.webp"]},{"id":"c016","chapter":1,"chapterName":"行列式","slide":35,"no":16,"q":["assets/img/q-016-1.webp"],"a":["assets/img/a-016-1.webp","assets/img/a-016-2.webp","assets/img/a-016-3.webp"]},{"id":"c017","chapter":1,"chapterName":"行列式","slide":40,"no":17,"q":["assets/img/q-017-1.webp"],"a":["assets/img/a-017-1.webp","assets/img/a-017-2.webp"]},{"id":"c018","chapter":1,"chapterName":"行列式","slide":42,"no":18,"q":["assets/img/q-018-1.webp"],"a":["assets/img/a-018-1.webp","assets/img/a-018-2.webp","assets/img/a-018-3.webp","assets/img/a-018-4.webp"]},{"id":"c019","chapter":1,"chapterName":"行列式","slide":47,"no":19,"q":["assets/img/q-019-1.webp"],"a":["assets/img/a-019-1.webp","assets/img/a-019-2.webp","assets/img/a-019-3.webp"]},{"id":"c020","chapter":1,"chapterName":"行列式","slide":50,"no":20,"q":["assets/img/q-020-1.webp"],"a":["assets/img/a-020-1.webp","assets/img/a-020-2.webp","assets/img/a-020-3.webp"]},{"id":"c066","chapter":2,"chapterName":"矩阵代数","slide":53,"no":1,"q":["assets/img/q-066-1.webp"],"a":["assets/img/a-066-1.webp"]},{"id":"c067","chapter":2,"chapterName":"矩阵代数","slide":53,"no":2,"q":["assets/img/q-067-1.webp"],"a":["assets/img/a-067-1.webp","assets/img/a-067-2.webp"]},{"id":"c068","chapter":2,"chapterName":"矩阵代数","slide":53,"no":3,"q":["assets/img/q-068-1.webp"],"a":["assets/img/a-068-1.webp"]},{"id":"c021","chapter":2,"chapterName":"矩阵代数","slide":54,"no":4,"q":["assets/img/q-021-1.webp"],"a":["assets/img/a-021-1.webp"]},{"id":"c022","chapter":2,"chapterName":"矩阵代数","slide":55,"no":5,"q":["assets/img/q-022-1.webp"],"a":["assets/img/a-022-1.webp","assets/img/a-022-2.webp"]},{"id":"c023","chapter":2,"chapterName":"矩阵代数","slide":57,"no":6,"q":["assets/img/q-023-1.webp"],"a":["assets/img/a-023-1.webp","assets/img/a-023-2.webp","assets/img/a-023-3.webp"]},{"id":"c024","chapter":2,"chapterName":"矩阵代数","slide":60,"no":7,"q":["assets/img/q-024-1.webp"],"a":["assets/img/a-024-1.webp","assets/img/a-024-2.webp"]},{"id":"c025","chapter":2,"chapterName":"矩阵代数","slide":62,"no":8,"q":["assets/img/q-025-1.webp"],"a":["assets/img/a-025-1.webp"]},{"id":"c026","chapter":2,"chapterName":"矩阵代数","slide":63,"no":9,"q":["assets/img/q-026-1.webp"],"a":["assets/img/a-026-1.webp","assets/img/a-026-2.webp"]},{"id":"c027","chapter":2,"chapterName":"矩阵代数","slide":65,"no":10,"q":["assets/img/q-027-1.webp"],"a":["assets/img/a-027-1.webp","assets/img/a-027-2.webp","assets/img/a-027-3.webp"]},{"id":"c028","chapter":2,"chapterName":"矩阵代数","slide":68,"no":11,"q":["assets/img/q-028-1.webp"],"a":["assets/img/a-028-1.webp","assets/img/a-028-2.webp"]},{"id":"c029","chapter":2,"chapterName":"矩阵代数","slide":73,"no":12,"q":["assets/img/q-029-1.webp"],"a":["assets/img/a-029-1.webp"]},{"id":"c030","chapter":2,"chapterName":"矩阵代数","slide":74,"no":13,"q":["assets/img/q-030-1.webp"],"a":["assets/img/a-030-1.webp","assets/img/a-030-2.webp"]},{"id":"c031","chapter":3,"chapterName":"初等变换与线性方程组","slide":76,"no":1,"q":["assets/img/q-031-1.webp"],"a":["assets/img/a-031-1.webp","assets/img/a-031-2.webp","assets/img/a-031-3.webp"]},{"id":"c032","chapter":3,"chapterName":"初等变换与线性方程组","slide":79,"no":2,"q":["assets/img/q-032-1.webp"],"a":["assets/img/a-032-1.webp","assets/img/a-032-2.webp"]},{"id":"c033","chapter":3,"chapterName":"初等变换与线性方程组","slide":82,"no":3,"q":["assets/img/q-033-1.webp"],"a":["assets/img/a-033-1.webp"]},{"id":"c034","chapter":3,"chapterName":"初等变换与线性方程组","slide":83,"no":4,"q":["assets/img/q-034-1.webp"],"a":["assets/img/a-034-1.webp","assets/img/a-034-2.webp","assets/img/a-034-3.webp"]},{"id":"c035","chapter":3,"chapterName":"初等变换与线性方程组","slide":86,"no":5,"q":["assets/img/q-035-1.webp"],"a":["assets/img/a-035-1.webp","assets/img/a-035-2.webp","assets/img/a-035-3.webp","assets/img/a-035-4.webp"]},{"id":"c036","chapter":4,"chapterName":"向量组的线性相关性","slide":90,"no":1,"q":["assets/img/q-036-1.webp"],"a":["assets/img/a-036-1.webp","assets/img/a-036-2.webp"]},{"id":"c037","chapter":4,"chapterName":"向量组的线性相关性","slide":92,"no":2,"q":["assets/img/q-037-1.webp"],"a":["assets/img/a-037-1.webp","assets/img/a-037-2.webp","assets/img/a-037-3.webp"]},{"id":"c038","chapter":4,"chapterName":"向量组的线性相关性","slide":95,"no":3,"q":["assets/img/q-038-1.webp"],"a":["assets/img/a-038-1.webp","assets/img/a-038-2.webp"]},{"id":"c039","chapter":4,"chapterName":"向量组的线性相关性","slide":97,"no":4,"q":["assets/img/q-039-1.webp"],"a":["assets/img/a-039-1.webp"]},{"id":"c040","chapter":4,"chapterName":"向量组的线性相关性","slide":98,"no":5,"q":["assets/img/q-040-1.webp"],"a":["assets/img/a-040-1.webp"]},{"id":"c041","chapter":4,"chapterName":"向量组的线性相关性","slide":99,"no":6,"q":["assets/img/q-041-1.webp"],"a":["assets/img/a-041-1.webp","assets/img/a-041-2.webp","assets/img/a-041-3.webp"]},{"id":"c042","chapter":4,"chapterName":"向量组的线性相关性","slide":102,"no":7,"q":["assets/img/q-042-1.webp"],"a":["assets/img/a-042-1.webp","assets/img/a-042-2.webp"]},{"id":"c043","chapter":4,"chapterName":"向量组的线性相关性","slide":104,"no":8,"q":["assets/img/q-043-1.webp"],"a":["assets/img/a-043-1.webp","assets/img/a-043-2.webp","assets/img/a-043-3.webp","assets/img/a-043-4.webp"]},{"id":"c044","chapter":5,"chapterName":"相似矩阵","slide":108,"no":1,"q":["assets/img/q-044-1.webp"],"a":["assets/img/a-044-1.webp"]},{"id":"c045","chapter":5,"chapterName":"相似矩阵","slide":108,"no":2,"q":["assets/img/q-045-1.webp"],"a":["assets/img/a-045-1.webp"]},{"id":"c046","chapter":5,"chapterName":"相似矩阵","slide":109,"no":3,"q":["assets/img/q-046-1.webp"],"a":["assets/img/a-046-1.webp","assets/img/a-046-2.webp"]},{"id":"c047","chapter":5,"chapterName":"相似矩阵","slide":111,"no":4,"q":["assets/img/q-047-1.webp"],"a":["assets/img/a-047-1.webp"]},{"id":"c048","chapter":5,"chapterName":"相似矩阵","slide":112,"no":5,"q":["assets/img/q-048-1.webp"],"a":["assets/img/a-048-1.webp","assets/img/a-048-2.webp"]},{"id":"c049","chapter":5,"chapterName":"相似矩阵","slide":114,"no":6,"q":["assets/img/q-049-1.webp"],"a":["assets/img/a-049-1.webp"]},{"id":"c050","chapter":5,"chapterName":"相似矩阵","slide":116,"no":7,"q":["assets/img/q-050-1.webp"],"a":["assets/img/a-050-1.webp","assets/img/a-050-2.webp"]},{"id":"c051","chapter":5,"chapterName":"相似矩阵","slide":118,"no":8,"q":["assets/img/q-051-1.webp"],"a":["assets/img/a-051-1.webp","assets/img/a-051-2.webp"]},{"id":"c052","chapter":5,"chapterName":"相似矩阵","slide":120,"no":9,"q":["assets/img/q-052-1.webp"],"a":["assets/img/a-052-1.webp","assets/img/a-052-2.webp","assets/img/a-052-3.webp"]},{"id":"c053","chapter":5,"chapterName":"相似矩阵","slide":123,"no":10,"q":["assets/img/q-053-1.webp"],"a":["assets/img/a-053-1.webp","assets/img/a-053-2.webp","assets/img/a-053-3.webp"]},{"id":"c054","chapter":5,"chapterName":"相似矩阵","slide":126,"no":11,"q":["assets/img/q-054-1.webp"],"a":["assets/img/a-054-1.webp"]},{"id":"c055","chapter":5,"chapterName":"相似矩阵","slide":128,"no":12,"q":["assets/img/q-055-1.webp"],"a":["assets/img/a-055-1.webp"]},{"id":"c056","chapter":5,"chapterName":"相似矩阵","slide":129,"no":13,"q":["assets/img/q-056-1.webp"],"a":["assets/img/a-056-1.webp","assets/img/a-056-2.webp","assets/img/a-056-3.webp","assets/img/a-056-4.webp","assets/img/a-056-5.webp"]},{"id":"c057","chapter":6,"chapterName":"二次型","slide":134,"no":1,"q":["assets/img/q-057-1.webp"],"a":["assets/img/a-057-1.webp"]},{"id":"c058","chapter":6,"chapterName":"二次型","slide":135,"no":2,"q":["assets/img/q-058-1.webp"],"a":["assets/img/a-058-1.webp"]},{"id":"c059","chapter":6,"chapterName":"二次型","slide":136,"no":3,"q":["assets/img/q-059-1.webp"],"a":["assets/img/a-059-1.webp","assets/img/a-059-2.webp"]},{"id":"c060","chapter":6,"chapterName":"二次型","slide":138,"no":4,"q":["assets/img/q-060-1.webp"],"a":["assets/img/a-060-1.webp","assets/img/a-060-2.webp"]},{"id":"c061","chapter":6,"chapterName":"二次型","slide":140,"no":5,"q":["assets/img/q-061-1.webp"],"a":["assets/img/a-061-1.webp","assets/img/a-061-2.webp"]},{"id":"c062","chapter":6,"chapterName":"二次型","slide":142,"no":6,"q":["assets/img/q-062-1.webp"],"a":["assets/img/a-062-1.webp","assets/img/a-062-2.webp","assets/img/a-062-3.webp"]},{"id":"c063","chapter":6,"chapterName":"二次型","slide":145,"no":7,"q":["assets/img/q-063-1.webp"],"a":["assets/img/a-063-1.webp"]},{"id":"c064","chapter":6,"chapterName":"二次型","slide":146,"no":8,"q":["assets/img/q-064-1.webp"],"a":["assets/img/a-064-1.webp","assets/img/a-064-2.webp","assets/img/a-064-3.webp","assets/img/a-064-4.webp"]},{"id":"c065","chapter":6,"chapterName":"二次型","slide":150,"no":9,"q":["assets/img/q-065-1.webp"],"a":["assets/img/a-065-1.webp","assets/img/a-065-2.webp","assets/img/a-065-3.webp"]}];
+const CHAPTER_COLORS = {1:"#2f3f8f",2:"#7a4b9e",3:"#2f6f7d",4:"#a05a2c",5:"#8b3a62",6:"#3f6b45"};
+const STORE_KEY = "linalg-flashcards-v2";
+const DAY = 86400000, MIN = 60000;
+const INTERVALS = [0, 1, 2, 4, 7, 15, 30];
+
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+
+/* ---------- storage ---------- */
+const STORE_VERSION = 2;
+const LEGACY_KEY = "linalg-flashcards-v1";
+function blankStore(){
+  return {
+    version: STORE_VERSION,
+    cards: {}, wrong: {}, days: {}, streak: 0, lastDay: null,
+    settings: {shuffle:false, weak:false, wrongOnly:false},
+    lastSession: null
+  };
+}
+function normalize(parsed){
+  const s = Object.assign(blankStore(), parsed || {});
+  s.version = STORE_VERSION;
+  s.settings = Object.assign({shuffle:false, weak:false, wrongOnly:false}, (parsed && parsed.settings) || {});
+  s.cards = (parsed && parsed.cards) || {};
+  s.days = (parsed && parsed.days) || {};
+  s.wrong = (parsed && parsed.wrong) || {};
+  // 错题记录字段兜底，容忍旧结构
+  for(const id of Object.keys(s.wrong)){
+    const e = s.wrong[id];
+    if(!e || typeof e !== "object"){ delete s.wrong[id]; continue; }
+    e.count = e.count || 0;
+    e.streak = e.streak || 0;
+    e.active = !!e.active;
+    e.last = e.last || 0;
+    e.correctedAt = e.correctedAt || null;
+    e.lastRating = e.lastRating || "";
+  }
+  return s;
+}
+let store = blankStore();
+try{
+  let raw = localStorage.getItem(STORE_KEY);
+  if(!raw) raw = localStorage.getItem(LEGACY_KEY);   // 旧版存档迁移
+  if(raw) store = normalize(JSON.parse(raw));
+}catch(e){ /* file:// may block storage; run in memory */ }
+function save(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(store)); }catch(e){} }
+
+/* ---------- date helpers ---------- */
+function dkey(d=new Date()){ const p=n=>String(n).padStart(2,"0"); return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate()); }
+function ykey(){ const d=new Date(); d.setDate(d.getDate()-1); return dkey(d); }
+
+/* ---------- stats ---------- */
+function cardState(id){ return store.cards[id]; }
+function isMastered(id){ const s=store.cards[id]; return !!(s && s.box>=3); }
+function masteredCount(list=DECK){ return list.filter(c=>isMastered(c.id)).length; }
+function dueCount(){ const now=Date.now(); return DECK.filter(c=>{const s=store.cards[c.id]; return s && s.seen>0 && s.due<=now;}).length; }
+function todayCount(){ const d=store.days[dkey()]; return d ? (d.count||0) : 0; }
+
+/* ---------- wrongbook ---------- */
+function wrongEntry(id){ return store.wrong[id]; }
+function inWrongBook(id){ const e=store.wrong[id]; return !!(e && e.active); }
+function wrongBookCards(){ return DECK.filter(c=>inWrongBook(c.id)); }
+function correctedCards(){ return DECK.filter(c=>{ const e=store.wrong[c.id]; return !!(e && !e.active && e.count>0); }); }
+const RATE_TEXT = {again:"不会", hard:"模糊", good:"会了"};
+function fmtDate(ts){ if(!ts) return "—"; const d=new Date(ts); return (d.getMonth()+1)+"月"+d.getDate()+"日"; }
+function bumpDay(){
+  const t=dkey();
+  if(store.lastDay!==t){
+    store.streak = (store.lastDay===ykey()) ? (store.streak||0)+1 : 1;
+    store.lastDay=t;
+  }
+  if(!store.days[t]) store.days[t]={count:0};
+  store.days[t].count++;
+  const cutoff=Date.now()-120*DAY;
+  for(const k of Object.keys(store.days)){ if(new Date(k+"T00:00:00").getTime()<cutoff) delete store.days[k]; }
+}
+
+/* ---------- home ---------- */
+function renderHome(){
+  const total=DECK.length, mastered=masteredCount();
+  $("#deckCount").textContent=total;
+  $("#totalN").textContent=total;
+  $("#masteredN").textContent=mastered;
+  $("#masterPct").textContent=Math.round(mastered/total*100)+"%";
+  const C=439.8;
+  $("#ringFg").style.strokeDashoffset=String(C*(1-mastered/total));
+  $("#streakN").textContent=store.streak||0;
+  $("#todayN").textContent=todayCount();
+  $("#dueN").textContent=dueCount();
+  $("#unseenN").textContent=DECK.filter(c=>!store.cards[c.id]).length;
+  $("#shuffleToggle").classList.toggle("on", !!store.settings.shuffle);
+  $("#weakToggle").classList.toggle("on", !!store.settings.weak);
+  $("#wrongOnlyToggle").classList.toggle("on", !!store.settings.wrongOnly);
+  const resumable = store.lastSession && store.lastSession.queue && store.lastSession.queue.length>0;
+  $("#resumeBtn").classList.toggle("hidden", !resumable);
+
+  const wbList=wrongBookCards(), wbDone=correctedCards();
+  $("#wrongHeroN").textContent=wbList.length;
+
+  const list=$("#chapterList"); list.innerHTML="";
+  const wbBtn=document.createElement("button");
+  wbBtn.className="chapter wb";
+  wbBtn.innerHTML=`
+    <span class="num">错</span>
+    <span>
+      <h3>错题本</h3>
+      <span class="meta"><span>在册 ${wbList.length} 张</span><span>·</span><span>已订正 ${wbDone.length}</span></span>
+      <span class="minibar"><i style="width:${DECK.length?Math.round(wbList.length/DECK.length*100):0}%"></i></span>
+    </span>
+    <span class="go">›</span>`;
+  wbBtn.addEventListener("click", openWrongbook);
+  list.appendChild(wbBtn);
+
+  for(let ch=1; ch<=6; ch++){
+    const cards=DECK.filter(c=>c.chapter===ch);
+    if(!cards.length) continue;
+    const m=masteredCount(cards);
+    const one=cards[0];
+    const btn=document.createElement("button");
+    btn.className="chapter";
+    btn.style.setProperty("--ch", CHAPTER_COLORS[ch]);
+    btn.innerHTML=`
+      <span class="num">0${ch}</span>
+      <span>
+        <h3>${one.chapterName}</h3>
+        <span class="meta"><span>${cards.length} 张</span><span>·</span><span>已掌握 ${m}</span></span>
+        <span class="minibar"><i style="width:${Math.round(m/cards.length*100)}%"></i></span>
+      </span>
+      <span class="go">›</span>`;
+    btn.addEventListener("click", ()=>startSession(ch));
+    list.appendChild(btn);
+  }
+}
+
+/* ---------- session ---------- */
+let session=null;
+
+function buildQueue(chapter, opts={}){
+  const now=Date.now();
+  let list;
+  if(opts.ids){
+    const set=new Set(opts.ids);
+    list=DECK.filter(c=>set.has(c.id));
+  }else{
+    list=DECK.filter(c=>!chapter || c.chapter===chapter);
+    const onlyWrong = opts.wrongOnly!==undefined ? !!opts.wrongOnly : !!store.settings.wrongOnly;
+    if(onlyWrong) list=list.filter(c=>inWrongBook(c.id));
+  }
+  if(!opts.ids && store.settings.weak) list=list.filter(c=>!isMastered(c.id));
+  if(!opts.ids && store.settings.shuffle) list=shuffle(list);
+  const prio=c=>{ const s=store.cards[c.id]; if(s && s.seen>0 && s.due<=now) return 0; if(!s) return 1; return 2; };
+  list=list.slice().sort((a,b)=>prio(a)-prio(b));
+  return list.map(c=>({id:c.id, rep:0}));
+}
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+function startSession(chapter, opts={}){
+  const queue=buildQueue(chapter, opts);
+  if(!queue.length){ toast("这个范围里没有可练的卡片"); return; }
+  session={
+    chapter, queue, total:queue.length, completed:0,
+    done:new Set(), results:{}, start:Date.now(), revealed:false,
+    currentId:null, origin:opts.origin||null, opts
+  };
+  if(opts.origin==="wrong"){
+    store.lastSession={chapter:null, origin:"wrong", startedAt:session.start, queue:queue.map(q=>q.id)};
+  }else{
+    store.lastSession={chapter, origin:null, startedAt:session.start, queue:queue.map(q=>q.id)};
+  }
+  saveHome();
+  showScreen("practice");
+  renderCard();
+}
+
+function startWrongPractice(chapterFilter){
+  const list=wrongBookCards().filter(c=>!chapterFilter || c.chapter===chapterFilter);
+  if(!list.length){ toast("这个范围里没有错题"); return; }
+  startSession(null, {ids:list.map(c=>c.id), origin:"wrong", filter:chapterFilter||0});
+}
+
+function currentCard(){ return session && session.queue.length ? DECK.find(c=>c.id===session.queue[0].id) : null; }
+
+function renderCard(){
+  const c=currentCard();
+  if(!c){ finishSession(); return; }
+  session.currentId=c.id;
+  session.revealed=false;
+  const ch=c.chapter;
+  $("#crumbDot").style.background=CHAPTER_COLORS[ch];
+  $("#crumbTitle").textContent=`第 ${ch} 章 · ${c.chapterName}`;
+  $("#crumbSub").textContent=`原课件 P${c.slide} · 本章共 ${DECK.filter(x=>x.chapter===ch).length} 张`;
+  $("#kickerLeft").textContent=`第 ${DECK.indexOf(c)+1} 张 · ${c.chapterName}`;
+  $("#kickerRight").textContent=`本章 ${c.no} / ${DECK.filter(x=>x.chapter===ch).length}`;
+  $("#doneN").textContent=session.completed;
+  $("#sessionTotal").textContent=session.total;
+  $("#progressBar").style.width=(session.completed/session.total*100)+"%";
+
+  const qbox=$("#qbox"); qbox.innerHTML="";
+  c.q.forEach((src,i)=>{
+    const img=document.createElement("img");
+    img.src=src; img.alt="第 "+(DECK.indexOf(c)+1)+" 张题目"+(i?("（续 "+(i+1)+"）"):"");
+    img.loading="eager"; img.className="zoomable";
+    img.addEventListener("click",()=>openZoom(src));
+    img.addEventListener("error",()=>{ img.alt="图片加载失败："+src; });
+    qbox.appendChild(img);
+  });
+  $("#abox").innerHTML="";
+  $("#answerArea").classList.add("hidden");
+  $("#revealBtn").classList.remove("hidden");
+  $("#revealBtn").disabled=false;
+  const card=$("#card");
+  card.classList.remove("leaving");
+  card.style.animation="none"; void card.offsetWidth; card.style.animation="";
+  $("#ratedock")?.remove();
+  window.scrollTo({top:0,behavior:"auto"});
+  preload(c);
+}
+
+function preload(c){
+  [...c.a].forEach(src=>{ const i=new Image(); i.src=src; });
+  const nxt=session.queue[1]; if(nxt){ const nc=DECK.find(x=>x.id===nxt.id); if(nc) nc.q.forEach(src=>{ const i=new Image(); i.src=src; }); }
+}
+
+function reveal(){
+  if(!session || session.revealed) return;
+  const c=currentCard(); if(!c) return;
+  session.revealed=true;
+  $("#revealBtn").classList.add("hidden");
+  const area=$("#answerArea"); area.classList.remove("hidden");
+  const abox=$("#abox"); abox.innerHTML="";
+  c.a.forEach((src,i)=>{
+    const img=document.createElement("img");
+    img.src=src; img.alt="第 "+(DECK.indexOf(c)+1)+" 张解析"+(i?("（续 "+(i+1)+"）"):"");
+    img.loading="eager"; img.className="zoomable";
+    img.addEventListener("click",()=>openZoom(src));
+    abox.appendChild(img);
+  });
+  showRateDock();
+}
+
+function showRateDock(){
+  $("#ratedock")?.remove();
+  const dock=document.createElement("div");
+  dock.className="ratedock"; dock.id="ratedock";
+  dock.innerHTML=`
+    <div class="ask">这张掌握得怎么样？</div>
+    <div class="rates">
+      <button class="rate k1" data-k="again">不会 <small>再来一次</small><span class="key">1</span></button>
+      <button class="rate k2" data-k="hard">模糊 <small>稍后再看</small><span class="key">2</span></button>
+      <button class="rate k3" data-k="good">会了 <small>下一张</small><span class="key">3</span></button>
+    </div>`;
+  document.body.appendChild(dock);
+  dock.addEventListener("click",e=>{ const b=e.target.closest(".rate"); if(b) rate(b.dataset.k); });
+  requestAnimationFrame(()=>dock.classList.add("on"));
+}
+
+function rate(kind){
+  if(!session || !session.revealed || !session.currentId) return;
+  const c=currentCard(); if(!c) return;
+  const id=c.id, now=Date.now();
+  let s=store.cards[id] || {box:0, due:0, seen:0, right:0, wrong:0};
+  s.seen=(s.seen||0)+1;
+  if(kind==="good"){
+    s.box=Math.min(6,(s.box||0)+1);
+    s.right=(s.right||0)+1;
+    s.due=now+INTERVALS[s.box]*DAY;
+  }else if(kind==="hard"){
+    s.wrong=(s.wrong||0)+1;
+    s.due=now+30*MIN;
+  }else{
+    s.wrong=(s.wrong||0)+1;
+    s.box=0; s.due=now;
+  }
+  s.last=now;
+  store.cards[id]=s;
+
+  /* 错题本：只有「不会」计入；「模糊」只按原未掌握逻辑处理 */
+  const wasActive=inWrongBook(id);
+  const entry=store.wrong[id];
+  if(kind==="again"){
+    const e = entry || (store.wrong[id]={count:0,last:0,lastRating:"",streak:0,active:false,correctedAt:null});
+    e.count=(e.count||0)+1;
+    e.last=now; e.lastRating="again"; e.streak=0;
+    e.active=true; e.correctedAt=null;
+  }else if(entry){
+    entry.lastRating=kind;
+    if(entry.active){
+      if(kind==="good"){
+        entry.streak=(entry.streak||0)+1;
+        if(entry.streak>=3){ entry.active=false; entry.correctedAt=now; }
+      }else{
+        entry.streak=0;  /* 模糊会中断「连续会了」 */
+      }
+    }
+  }
+  bumpDay();
+
+  session.results[id]=kind;
+  const item=session.queue.shift();
+  if(kind==="good" || item.rep>=2){
+    if(!session.done.has(id)){ session.done.add(id); session.completed++; }
+  }else{
+    const at=Math.min(3, session.queue.length);
+    session.queue.splice(at,0,{id, rep:(item.rep||0)+1});
+  }
+  session.revealed=false;
+  $("#ratedock")?.remove();
+  save();
+  if(kind==="again" && !wasActive) toast("已记入错题本");
+  else if(kind==="good" && wasActive && !inWrongBook(id)) toast("连续 3 次会了，已订正并移出错题本");
+
+  const card=$("#card"); card.classList.add("leaving");
+  setTimeout(()=>{
+    if(session.queue.length===0){ finishSession(); }
+    else renderCard();
+  }, 170);
+}
+
+function skipCard(){
+  if(!session) return;
+  const item=session.queue.shift();
+  session.queue.push({id:item.id, rep:(item.rep||0)+1});
+  session.revealed=false;
+  $("#ratedock")?.remove();
+  renderCard();
+}
+
+function finishSession(){
+  if(!session) return;
+  const c=session;
+  const mins=Math.max(1,Math.round((Date.now()-c.start)/MIN));
+  const mm=Math.floor((Date.now()-c.start)/MIN), ss=Math.floor(((Date.now()-c.start)%MIN)/1000);
+  $("#sumSub").textContent=`共复习 ${c.total} 张卡片 · 来自${c.origin==="wrong" ? "错题本" : (c.chapter?("第 "+c.chapter+" 章"):"全部章节")}`;
+  const good=Object.values(c.results).filter(x=>x==="good").length;
+  const hard=Object.values(c.results).filter(x=>x==="hard").length;
+  const again=Object.values(c.results).filter(x=>x==="again").length;
+  $("#sumGood").textContent=good; $("#sumHard").textContent=hard; $("#sumAgain").textContent=again;
+  $("#sumTime").textContent=mm+":"+String(ss).padStart(2,"0");
+  const weak=Object.keys(c.results).filter(id=>c.results[id]!== "good").map(id=>DECK.find(x=>x.id===id)).filter(Boolean);
+  const box=$("#weakList");
+  if(weak.length){
+    box.innerHTML=`<h3>需要再看的 ${weak.length} 张</h3><div class="weakitems">`+weak.map(w=>`<span>第 ${w.chapter} 章 · 第 ${w.no} 张</span>`).join("")+`</div>`;
+  } else { box.innerHTML=`<h3>全部一次通过，漂亮。</h3>`; }
+  store.lastSession=null;
+  save();
+  showScreen("summary");
+}
+
+/* ---------- wrongbook view ---------- */
+let wbFilter=0, wbView="active";
+
+function openWrongbook(){ wbView="active"; wbFilter=0; showScreen("wrongbook"); }
+
+function renderWrongbook(){
+  const active=wrongBookCards(), done=correctedCards();
+  $("#wbSub").textContent=`在册 ${active.length} 张 · 已订正 ${done.length} 张`;
+  $("#wbViewActive").classList.toggle("on", wbView==="active");
+  $("#wbViewDone").classList.toggle("on", wbView==="done");
+  const src = wbView==="active" ? active : done;
+  if(!src.some(c=>c.chapter===wbFilter)) wbFilter=0;
+  const filtered = wbFilter ? src.filter(c=>c.chapter===wbFilter) : src;
+  $("#wbN").textContent=filtered.length;
+  $("#wbTotal").textContent=src.length;
+  $("#wbPractice").disabled = wbView!=="active" || !filtered.length;
+
+  const chips=$("#wbChips"); chips.innerHTML="";
+  const mkChip=(label,val)=>{
+    const b=document.createElement("button");
+    b.className="wb-chip"+(wbFilter===val?" on":"");
+    b.textContent=label;
+    b.addEventListener("click",()=>{ wbFilter=val; renderWrongbook(); });
+    chips.appendChild(b);
+  };
+  mkChip(`全部 ${src.length}`,0);
+  for(let ch=1; ch<=6; ch++){
+    const n=src.filter(c=>c.chapter===ch).length;
+    if(n) mkChip(`第 ${ch} 章 ${n}`,ch);
+  }
+
+  const box=$("#wbList"); box.innerHTML="";
+  if(!filtered.length){
+    box.innerHTML = wbView==="active"
+      ? `<div class="wb-empty"><b>错题本是空的</b>自评「不会」的卡片会自动记到这里；<br>之后连续 3 次自评「会了」就视为订正，移出练习队列。</div>`
+      : `<div class="wb-empty"><b>还没有已订正的记录</b>错题连续 3 次「会了」，或手动移出后，会保留在这里。</div>`;
+    return;
+  }
+  const groups=[...new Set(filtered.map(c=>c.chapter))].sort((a,b)=>a-b);
+  groups.forEach(ch=>{
+    const items=filtered.filter(c=>c.chapter===ch);
+    const g=document.createElement("div"); g.className="wb-group";
+    g.innerHTML=`<h3><span>第 ${ch} 章 · ${items[0].chapterName}</span><span>${items.length} 张</span></h3>`;
+    items.forEach(c=>{
+      const e=wrongEntry(c.id);
+      const rating=e.lastRating||"";
+      const row=document.createElement("div");
+      row.className="wb-row";
+      row.style.setProperty("--ch", CHAPTER_COLORS[ch]);
+      row.innerHTML=`
+        <span class="idx">${c.no}</span>
+        <span class="info">
+          <b>第 ${c.no} 张 · 原课件 P${c.slide}</b>
+          <span>累计错 ${e.count} 次 · ${wbView==="active"
+            ? `最近一次：${RATE_TEXT[rating]||"—"}`
+            : `订正于 ${fmtDate(e.correctedAt)}${e.manual?"（手动移出）":""}`}</span>
+        </span>
+        <span class="tagx ${rating}">${wbView==="active" ? (RATE_TEXT[rating]||"未评") : (e.manual?"已移出":"已订正")}</span>`;
+      if(wbView==="active"){
+        const btn=document.createElement("button");
+        btn.className="rem"; btn.textContent="移出"; btn.title="移出错题本，保留历史记录";
+        btn.addEventListener("click",()=>removeWrong(c.id));
+        row.appendChild(btn);
+      }
+      g.appendChild(row);
+    });
+    box.appendChild(g);
+  });
+}
+
+function removeWrong(id){
+  const e=store.wrong[id]; if(!e) return;
+  e.active=false; e.streak=0; e.correctedAt=Date.now(); e.manual=true;
+  save(); renderWrongbook(); toast("已移出错题本");
+}
+
+function clearWrong(){
+  if(!confirm("确定清空错题本吗？在册错题会全部移除。")) return;
+  if(!confirm("再次确认：清空后累计错次与订正历史都会删除，且无法恢复。")) return;
+  store.wrong={}; save(); renderWrongbook(); toast("错题本已清空");
+}
+
+/* ---------- screens ---------- */
+function showScreen(name){
+  ["home","practice","summary","wrongbook"].forEach(n=>$("#"+n).classList.toggle("hidden",n!==name));
+  if(name==="home"){ renderHome(); $("#ratedock")?.remove(); }
+  if(name==="wrongbook"){ renderWrongbook(); $("#ratedock")?.remove(); }
+  if(name!=="practice"){ $("#ratedock")?.remove(); }
+  window.scrollTo({top:0,behavior:"auto"});
+  document.body.classList.toggle("in-session", name==="practice");
+}
+function saveHome(){ save(); }
+
+/* ---------- zoom ---------- */
+let zoomScale=1, zoomSrc="";
+function openZoom(src){
+  zoomSrc=src; zoomScale=1;
+  const z=$("#zoom"); z.classList.remove("hidden"); z.setAttribute("aria-hidden","false");
+  $("#zoomImg").src=src; $("#zoomImg").style.width="100%"; $("#zoomPct").textContent="100%";
+  document.documentElement.style.overflow="hidden";
+}
+function closeZoom(){
+  $("#zoom").classList.add("hidden"); $("#zoom").setAttribute("aria-hidden","true");
+  document.documentElement.style.overflow="";
+}
+function setZoom(s){
+  zoomScale=Math.max(0.6,Math.min(3,Math.round(s*10)/10));
+  $("#zoomImg").style.width=(zoomScale*100)+"%";
+  $("#zoomPct").textContent=Math.round(zoomScale*100)+"%";
+}
+
+/* ---------- toast ---------- */
+let toastTimer=null;
+function toast(msg){
+  const t=$("#toast"); t.textContent=msg; t.classList.add("on");
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove("on"),1900);
+}
+
+/* ---------- events ---------- */
+$("#startBtn").addEventListener("click",()=>startSession(null));
+$("#resumeBtn").addEventListener("click",()=>{
+  const ls=store.lastSession;
+  if(!ls) return;
+  const q=(ls.queue||[]).filter(id=>DECK.some(c=>c.id===id)).map(id=>({id,rep:0}));
+  if(!q.length){ toast("上次的进度已经完成"); return; }
+  session={chapter:ls.chapter||null, origin:ls.origin||null, queue:q, total:q.length, completed:0, done:new Set(), results:{}, start:Date.now(), revealed:false, currentId:null};
+  showScreen("practice"); renderCard();
+});
+$("#shuffleToggle").addEventListener("click",()=>{ store.settings.shuffle=!store.settings.shuffle; save(); renderHome(); });
+$("#weakToggle").addEventListener("click",()=>{ store.settings.weak=!store.settings.weak; save(); renderHome(); });
+$("#wrongOnlyToggle").addEventListener("click",()=>{
+  store.settings.wrongOnly=!store.settings.wrongOnly; save(); renderHome();
+  toast(store.settings.wrongOnly ? "只练错题：已开启" : "只练错题：已关闭");
+});
+$("#wrongBtn").addEventListener("click",openWrongbook);
+$("#wbBack").addEventListener("click",()=>showScreen("home"));
+$("#wbViewActive").addEventListener("click",()=>{ wbView="active"; renderWrongbook(); });
+$("#wbViewDone").addEventListener("click",()=>{ wbView="done"; renderWrongbook(); });
+$("#wbPractice").addEventListener("click",()=>startWrongPractice(wbFilter));
+$("#wbClear").addEventListener("click",clearWrong);
+$("#backBtn").addEventListener("click",()=>{
+  if(session && session.queue.length){ store.lastSession={chapter:session.chapter, origin:session.origin||null, startedAt:Date.now(), queue:session.queue.map(q=>q.id)}; save(); toast("已保存本轮进度"); }
+  session=null; showScreen("home");
+});
+$("#revealBtn").addEventListener("click",reveal);
+$("#homeBtn").addEventListener("click",()=>{ session=null; showScreen("home"); });
+$("#againBtn").addEventListener("click",()=>{
+  if(!session) return;
+  const ch=session.chapter, origin=session.origin, filter=(session.opts&&session.opts.filter)||0;
+  session=null;
+  if(origin==="wrong") startWrongPractice(filter);
+  else startSession(ch);
+});
+$("#resetBtn").addEventListener("click",()=>{
+  if(!confirm("确定清空所有学习记录与错题本吗？此操作不可恢复。")) return;
+  store=blankStore(); save(); renderHome(); toast("学习记录已清空");
+});
+$("#zoomClose").addEventListener("click",closeZoom);
+$("#zoomIn").addEventListener("click",()=>setZoom(zoomScale+0.25));
+$("#zoomOut").addEventListener("click",()=>setZoom(zoomScale-0.25));
+$("#zoom").addEventListener("click",e=>{ if(e.target===$("#zoom")) closeZoom(); });
+$("#zoomScroll").addEventListener("wheel",e=>{
+  if(!e.ctrlKey) return; e.preventDefault(); setZoom(zoomScale+(e.deltaY<0?0.1:-0.1));
+},{passive:false});
+
+document.addEventListener("keydown",e=>{
+  const zopen=!$("#zoom").classList.contains("hidden");
+  if(zopen){ if(e.key==="Escape") closeZoom(); return; }
+  if(!$("#summary").classList.contains("hidden")){
+    if(e.key==="Enter") $("#againBtn").click();
+    return;
+  }
+  if(!$("#wrongbook").classList.contains("hidden")){
+    if(e.key==="Escape") showScreen("home");
+    return;
+  }
+  if($("#practice").classList.contains("hidden")){
+    if(e.key==="Enter" && !$("#startBtn").disabled) $("#startBtn").click();
+    return;
+  }
+  if(e.key===" "||e.key==="Enter"){ e.preventDefault(); if(session && !session.revealed) reveal(); return; }
+  if(!session) return;
+  if(session.revealed){
+    if(e.key==="1"){e.preventDefault();rate("again");}
+    else if(e.key==="2"){e.preventDefault();rate("hard");}
+    else if(e.key==="3"){e.preventDefault();rate("good");}
+  }
+  if(e.key==="Escape") $("#backBtn").click();
+});
+
+/* swipe: left = reveal, right = back? keep subtle */
+let touchX=null, touchY=null;
+$("#practice").addEventListener("touchstart",e=>{ if(e.touches.length===1){ touchX=e.touches[0].clientX; touchY=e.touches[0].clientY; } },{passive:true});
+$("#practice").addEventListener("touchend",e=>{
+  if(touchX===null) return;
+  const dx=e.changedTouches[0].clientX-touchX, dy=e.changedTouches[0].clientY-touchY;
+  touchX=null;
+  if(Math.abs(dx)>70 && Math.abs(dy)<50 && !session?.revealed && dx<0) reveal();
+},{passive:true});
+
+renderHome();
+</script>
+</body>
+</html>
